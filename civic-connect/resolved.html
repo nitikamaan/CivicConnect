@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CivicVoice - Resolved Issues</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/supabase-js/2.38.0/umd/supabase.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">💬</span>
+                    <span class="logo-text">CivicVoice</span>
+                </div>
+            </div>
+            <ul class="sidebar-menu">
+                <li class="menu-item">
+                    <a href="index.html">
+                        <span class="menu-icon">📊</span>
+                        <span class="menu-text">Dashboard</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="my-reports.html">
+                        <span class="menu-icon">📋</span>
+                        <span class="menu-text">My Reports</span>
+                    </a>
+                </li>
+                <li class="menu-item active">
+                    <a href="resolved.html">
+                        <span class="menu-icon">✅</span>
+                        <span class="menu-text">Resolved</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="analytics.html">
+                        <span class="menu-icon">📈</span>
+                        <span class="menu-text">Analytics</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <div class="need-help">
+                    <h4>Need a hand?</h4>
+                    <p>Our support team is here to help</p>
+                    <button class="contact-btn">Contact Us</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <h1>Resolved Issues</h1>
+                <div class="header-controls">
+                    <div class="search-bar">
+                        <input type="text" placeholder="Search resolved issues..." id="searchInput">
+                        <span class="search-icon">🔍</span>
+                    </div>
+                    <div class="notifications">
+                        <span class="notification-icon">🔔</span>
+                        <span class="notification-count">1</span>
+                    </div>
+                    <div class="profile">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiNGRkQ3MDAiLz4KPHN2ZyB4PSI4IiB5PSI4IiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSI+CjxwYXRoIGQ9Ik0yMCAyMXYtMmE0IDQgMCAwIDAtNC00SDhhNCA0IDAgMCAwLTQgNHYyIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CjxjaXJjbGUgY3g9IjEyIiBjeT0iNyIgcj0iNCIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4KPC9zdmc+" alt="Profile" class="profile-avatar">
+                    </div>
+                </div>
+            </header>
+
+            <!-- Resolved Stats -->
+            <section class="stats-section">
+                <div class="stats-grid">
+                    <div class="stat-card success">
+                        <div class="stat-number" id="totalResolved">0</div>
+                        <div class="stat-label">Total Resolved</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="thisMonth">0</div>
+                        <div class="stat-label">This Month</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="avgResolutionTime">0</div>
+                        <div class="stat-label">Avg. Resolution (days)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="communityImpact">0</div>
+                        <div class="stat-label">Community Impact</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Filters -->
+            <section class="filters-section">
+                <div class="filter-controls">
+                    <select id="timeFilter" class="filter-select">
+                        <option value="">All Time</option>
+                        <option value="week">Last Week</option>
+                        <option value="month">Last Month</option>
+                        <option value="quarter">Last Quarter</option>
+                        <option value="year">Last Year</option>
+                    </select>
+                    <select id="typeFilter" class="filter-select">
+                        <option value="">All Types</option>
+                        <option value="pothole">Pothole</option>
+                        <option value="graffiti">Graffiti</option>
+                        <option value="streetlight">Streetlight</option>
+                        <option value="trash">Trash</option>
+                        <option value="traffic">Traffic</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <select id="districtFilter" class="filter-select">
+                        <option value="">All Districts</option>
+                        <option value="1">District 1</option>
+                        <option value="2">District 2</option>
+                        <option value="3">District 3</option>
+                        <option value="4">District 4</option>
+                        <option value="5">District 5</option>
+                        <option value="6">District 6</option>
+                        <option value="7">District 7</option>
+                        <option value="8">District 8</option>
+                    </select>
+                </div>
+            </section>
+
+            <!-- Resolved Issues -->
+            <section class="resolved-issues">
+                <h2>Successfully Resolved Issues</h2>
+                <div class="issues-grid" id="resolvedIssuesGrid">
+                    <!-- Resolved issues will be loaded here -->
+                </div>
+
+                <div class="load-more-section" id="loadMoreSection" style="display: none;">
+                    <button class="load-more-btn" id="loadMoreBtn">Load More Issues</button>
+                </div>
+
+                <div class="empty-state" id="emptyState" style="display: none;">
+                    <div class="empty-icon">✅</div>
+                    <h3>No resolved issues found</h3>
+                    <p>No issues match your current filters. Try adjusting your search criteria.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        let currentPage = 0;
+        const ITEMS_PER_PAGE = 12;
+
+        // Page-specific initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            loadResolvedIssues();
+            loadResolvedStats();
+            
+            // Filter event listeners
+            document.getElementById('timeFilter').addEventListener('change', () => {
+                currentPage = 0;
+                loadResolvedIssues();
+            });
+            document.getElementById('typeFilter').addEventListener('change', () => {
+                currentPage = 0;
+                loadResolvedIssues();
+            });
+            document.getElementById('districtFilter').addEventListener('change', () => {
+                currentPage = 0;
+                loadResolvedIssues();
+            });
+            document.getElementById('searchInput').addEventListener('input', () => {
+                currentPage = 0;
+                loadResolvedIssues();
+            });
+            document.getElementById('loadMoreBtn').addEventListener('click', () => {
+                currentPage++;
+                loadResolvedIssues(true);
+            });
+        });
+
+        async function loadResolvedStats() {
+            try {
+                const { data: resolvedIssues, error } = await supabase
+                    .from('issues')
+                    .select('*')
+                    .eq('status', 'resolved');
+
+                if (error) throw error;
+
+                const totalResolved = resolvedIssues.length;
+                const thisMonth = resolvedIssues.filter(issue => {
+                    const resolved = new Date(issue.resolved_at || issue.updated_at);
+                    const now = new Date();
+                    return resolved.getMonth() === now.getMonth() && resolved.getFullYear() === now.getFullYear();
+                }).length;
+
+                const avgResolution = calculateAverageResolutionTime(resolvedIssues);
+                const communityImpact = totalResolved * 5; // Simple impact calculation
+
+                document.getElementById('totalResolved').textContent = totalResolved;
+                document.getElementById('thisMonth').textContent = thisMonth;
+                document.getElementById('avgResolutionTime').textContent = avgResolution;
+                document.getElementById('communityImpact').textContent = communityImpact;
+            } catch (error) {
+                console.error('Error loading resolved stats:', error);
+            }
+        }
+
+        function calculateAverageResolutionTime(issues) {
+            if (issues.length === 0) return 0;
+            
+            const totalDays = issues.reduce((sum, issue) => {
+                const created = new Date(issue.created_at);
+                const resolved = new Date(issue.resolved_at || issue.updated_at);
+                const diffTime = Math.abs(resolved - created);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                return sum + diffDays;
+            }, 0);
+
+            return Math.round(totalDays / issues.length);
+        }
+    </script>
+</body>
+</html>

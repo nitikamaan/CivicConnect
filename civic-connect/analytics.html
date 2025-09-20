@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics - Issue Tracker</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/supabase-js/2.38.0/umd/supabase.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">🏛️</div>
+                    <div class="logo-text">CityFix</div>
+                </div>
+            </div>
+            <nav>
+                <ul class="sidebar-menu">
+                    <li class="menu-item">
+                        <a href="index.html">
+                            <span class="menu-icon">📊</span>
+                            <span class="menu-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="my-reports.html">
+                            <span class="menu-icon">📝</span>
+                            <span class="menu-text">My Reports</span>
+                        </a>
+                    </li>
+                    <li class="menu-item active">
+                        <a href="analytics.html">
+                            <span class="menu-icon">📈</span>
+                            <span class="menu-text">Analytics</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="resolved.html">
+                            <span class="menu-icon">✅</span>
+                            <span class="menu-text">Resolved Issues</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="need-help">
+                    <h4>Need Help?</h4>
+                    <p>Contact our support team for assistance</p>
+                    <button class="contact-btn">Contact Support</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <h1>Analytics Dashboard</h1>
+                <div class="header-controls">
+                    <div class="search-bar">
+                        <input type="text" placeholder="Search insights..." id="searchInput">
+                        <span class="search-icon">🔍</span>
+                    </div>
+                    <div class="notifications">
+                        <span class="notification-icon">🔔</span>
+                        <span class="notification-count">3</span>
+                    </div>
+                    <div class="profile-avatar" style="background: linear-gradient(135deg, #FFD700, #FF6B6B); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">U</div>
+                </div>
+            </header>
+
+            <!-- Overview Cards -->
+            <section class="analytics-overview">
+                <div class="overview-grid">
+                    <div class="overview-card">
+                        <div class="card-icon" style="color: #FFD700;">📊</div>
+                        <div class="card-content">
+                            <div class="card-number" id="totalIssuesCount">0</div>
+                            <div class="card-label">Total Issues</div>
+                            <div class="card-change positive" id="totalIssuesChange">+0% from last month</div>
+                        </div>
+                    </div>
+                    <div class="overview-card">
+                        <div class="card-icon" style="color: #16a34a;">✅</div>
+                        <div class="card-content">
+                            <div class="card-number" id="resolvedCount">0</div>
+                            <div class="card-label">Resolved This Month</div>
+                            <div class="card-change positive" id="resolvedChange">+0% resolution rate</div>
+                        </div>
+                    </div>
+                    <div class="overview-card">
+                        <div class="card-icon" style="color: #f59e0b;">⏱️</div>
+                        <div class="card-content">
+                            <div class="card-number" id="avgResolutionTime">0</div>
+                            <div class="card-label">Avg Resolution Time</div>
+                            <div class="card-change neutral" id="avgResolutionChange">days</div>
+                        </div>
+                    </div>
+                    <div class="overview-card">
+                        <div class="card-icon" style="color: #3b82f6;">👍</div>
+                        <div class="card-content">
+                            <div class="card-number" id="satisfactionScore">0%</div>
+                            <div class="card-label">Satisfaction Score</div>
+                            <div class="card-change positive" id="satisfactionChange">+0% approval rate</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Charts Section -->
+            <section class="charts-section">
+                <div class="charts-grid">
+                    <!-- Issues Trend Chart -->
+                    <div class="chart-container full-width">
+                        <div class="chart-header">
+                            <h3>Issues Trend Over Time</h3>
+                            <select class="chart-filter" id="trendFilter">
+                                <option value="7">Last 7 days</option>
+                                <option value="30" selected>Last 30 days</option>
+                                <option value="90">Last 90 days</option>
+                            </select>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="issuesTrendChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Issue Types Distribution -->
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Issues by Category</h3>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="issueTypesChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Status Distribution -->
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Status Distribution</h3>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="statusChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- District Performance -->
+                    <div class="chart-container full-width">
+                        <div class="chart-header">
+                            <h3>District Performance</h3>
+                            <select class="chart-filter" id="districtFilter">
+                                <option value="resolution">Resolution Rate</option>
+                                <option value="response">Response Time</option>
+                            </select>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="districtChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Insights Section -->
+            <section class="insights-section">
+                <h2>Key Insights</h2>
+                <div class="insights-grid" id="insightsGrid">
+                    <div class="insight-card success">
+                        <div class="insight-icon">📈</div>
+                        <div class="insight-content">
+                            <h4>Resolution Rate Improved</h4>
+                            <p>Issue resolution rate increased by 15% this month compared to last month, indicating improved response efficiency.</p>
+                        </div>
+                    </div>
+                    <div class="insight-card warning">
+                        <div class="insight-icon">⚠️</div>
+                        <div class="insight-content">
+                            <h4>High Volume in District 5</h4>
+                            <p>District 5 shows 40% more issues than average. Consider allocating additional resources to this area.</p>
+                        </div>
+                    </div>
+                    <div class="insight-card info">
+                        <div class="insight-icon">💡</div>
+                        <div class="insight-content">
+                            <h4>Pothole Reports Peak</h4>
+                            <p>Pothole reports are 60% higher during winter months. Proactive maintenance could reduce citizen complaints.</p>
+                        </div>
+                    </div>
+                    <div class="insight-card success">
+                        <div class="insight-icon">🎯</div>
+                        <div class="insight-content">
+                            <h4>Community Engagement Up</h4>
+                            <p>Citizen voting on issues increased by 25%, showing improved community engagement with the platform.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Supabase Configuration (Same as main app)
+        const SUPABASE_URL = 'https://viapjwhwndefdongsfxl.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZpYXBqd2h3bmRlZmRvbmdzZnhsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc3MDQ3NzEsImV4cCI6MjA3MzI4MDc3MX0.C2IIvm41Do0tYLZ2ZgP6GUbmCSCepF1GH8bhjgky-iw';
+
+        // Initialize Supabase client
+        const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+        // Sample analytics data (fallback when Supabase is not available)
+        const sampleAnalyticsData = {
+            totalIssues: 156,
+            resolvedThisMonth: 43,
+            avgResolutionTime: 5.2,
+            satisfactionScore: 87,
+            issuesTrend: [
+                { date: '2024-01-01', open: 12, resolved: 8, inProgress: 15 },
+                { date: '2024-01-02', open: 15, resolved: 12, inProgress: 18 },
+                { date: '2024-01-03', open: 10, resolved: 15, inProgress: 14 },
+                { date: '2024-01-04', open: 18, resolved: 10, inProgress: 20 },
+                { date: '2024-01-05', open: 14, resolved: 18, inProgress: 16 },
+                { date: '2024-01-06', open: 8, resolved: 14, inProgress: 12 },
+                { date: '2024-01-07', open: 12, resolved: 16, inProgress: 15 }
+            ],
+            issueTypes: {
+                pothole: 45,
+                streetlight: 32,
+                graffiti: 28,
+                garbage: 35,
+                other: 16
+            },
+            statusDistribution: {
+                open: 67,
+                inProgress: 46,
+                resolved: 43
+            },
+            districtPerformance: [
+                { district: 'District 1', resolved: 12, total: 15, avgDays: 4.2 },
+                { district: 'District 2', resolved: 18, total: 25, avgDays: 6.1 },
+                { district: 'District 3', resolved: 8, total: 12, avgDays: 3.8 },
+                { district: 'District 4', resolved: 22, total: 28, avgDays: 5.5 },
+                { district: 'District 5', resolved: 15, total: 35, avgDays: 8.2 }
+            ]
+        };
+
+        // Chart instances
+        let issuesTrendChart, issueTypesChart, statusChart, districtChart;
+
+        // Analytics Functions
+        async function getAnalyticsData() {
+            if (!supabase) {
+                console.log('Using sample analytics data');
+                return sampleAnalyticsData;
+            }
+
+            try {
+                // Fetch all issues
+                const { data: issues, error } = await supabase
+                    .from('issues')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                return processAnalyticsData(issues || []);
+            } catch (error) {
+                console.error('Error fetching analytics data:', error);
+                return sampleAnalyticsData;
+            }
+        }
+
+        function processAnalyticsData(issues) {
+            const now = new Date();
+            const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+
+            // Calculate basic metrics
+            const totalIssues = issues.length;
+            const resolvedThisMonth = issues.filter(issue => 
+                issue.status === 'resolved' && 
+                new Date(issue.updated_at) >= thirtyDaysAgo
+            ).length;
+
+            // Calculate average resolution time
+            const resolvedIssues = issues.filter(issue => issue.status === 'resolved');
+            let avgResolutionTime = 0;
+            if (resolvedIssues.length > 0) {
+                const totalDays = resolvedIssues.reduce((sum, issue) => {
+                    const created = new Date(issue.created_at);
+                    const resolved = new Date(issue.updated_at);
+                    const diffTime = Math.abs(resolved - created);
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    return sum + diffDays;
+                }, 0);
+                avgResolutionTime = (totalDays / resolvedIssues.length).toFixed(1);
+            }
+
+            // Calculate satisfaction score (based on upvotes vs downvotes)
+            const totalVotes = issues.reduce((sum, issue) => sum + (issue.upvotes || 0) + (issue.downvotes || 0), 0);
+            const totalUpvotes = issues.reduce((sum, issue) => sum + (issue.upvotes || 0), 0);
+            const satisfactionScore = totalVotes > 0 ? Math.round((totalUpvotes / totalVotes) * 100) : 85;
+
+            // Generate trend data for last 7 days
+            const issuesTrend = [];
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+                const dateStr = date.toISOString().split('T')[0];
+                
+                const dayIssues = issues.filter(issue => {
+                    const issueDate = new Date(issue.created_at).toISOString().split('T')[0];
+                    return issueDate === dateStr;
+                });
+
+                issuesTrend.push({
+                    date: dateStr,
+                    open: dayIssues.filter(i => i.status === 'open').length,
+                    resolved: dayIssues.filter(i => i.status === 'resolved').length,
+                    inProgress: dayIssues.filter(i => i.status === 'in-progress').length
+                });
+            }
+
+            // Process issue types
+            const issueTypes = {};
+            issues.forEach(issue => {
+                issueTypes[issue.type] = (issueTypes[issue.type] || 0) + 1;
+            });
+
+            // Status distribution
+            const statusDistribution = {
+                open: issues.filter(i => i.status === 'open').length,
+                inProgress: issues.filter(i => i.status === 'in-progress').length,
+                resolved: issues.filter(i => i.status === 'resolved').length
+            };
+
+            // District performance
+            const districtStats = {};
+            issues.forEach(issue => {
+                const district = issue.district || 'Unknown';
+                if (!districtStats[district]) {
+                    districtStats[district] = { total: 0, resolved: 0, totalDays: 0 };
+                }
+                districtStats[district].total++;
+                if (issue.status === 'resolved') {
+                    districtStats[district].resolved++;
+                    const created = new Date(issue.created_at);
+                    const resolved = new Date(issue.updated_at);
+                    const diffDays = Math.ceil(Math.abs(resolved - created) / (1000 * 60 * 60 * 24));
+                    districtStats[district].totalDays += diffDays;
+                }
+            });
+
+            const districtPerformance = Object.keys(districtStats).map(district => ({
+                district: `District ${district}`,
+                resolved: districtStats[district].resolved,
+                total: districtStats[district].total,
+                avgDays: districtStats[district].resolved > 0 
+                    ? (districtStats[district].totalDays / districtStats[district].resolved).toFixed(1)
+                    : 0
+            }));
+
+            return {
+                totalIssues,
+                resolvedThisMonth,
+                avgResolutionTime,
+                satisfactionScore,
+                issuesTrend,
+                issueTypes,
+                statusDistribution,
+                districtPerformance
+            };
+        }
+
+        // Chart Creation Functions
+        function createIssuesTrendChart(data) {
+            const ctx = document.getElementById('issuesTrendChart').getContext('2d');
+            
+            if (issuesTrendChart) {
+                issuesTrendChart.destroy();
+            }
+
+            issuesTrendChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.map(item => new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
+                    datasets: [
+                        {
+                            label: 'New Issues',
+                            data: data.map(item => item.open),
+                            borderColor: '#dc2626',
+                            backgroundColor: 'rgba(220, 38, 38, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'In Progress',
+                            data: data.map(item => item.inProgress),
+                            borderColor: '#FFD700',
+                            backgroundColor: 'rgba(255, 215, 0, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Resolved',
+                            data: data.map(item => item.resolved),
+                            borderColor: '#16a34a',
+                            backgroundColor: 'rgba(22, 163, 74, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#FFFFFF'
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                color: '#888'
+                            },
+                            grid: {
+                                color: '#333'
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                color: '#888'
+                            },
+                            grid: {
+                                color: '#333'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createIssueTypesChart(data) {
+            const ctx = document.getElementById('issueTypesChart').getContext('2d');
+            
+            if (issueTypesChart) {
+                issueTypesChart.destroy();
+            }
+
+            const colors = ['#FFD700', '#dc2626', '#16a34a', '#3b82f6', '#f59e0b'];
+            
+            issueTypesChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(data).map(type => type.charAt(0).toUpperCase() + type.slice(1)),
+                    datasets: [{
+                        data: Object.values(data),
+                        backgroundColor: colors,
+                        borderColor: '#1a1a1a',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#FFFFFF',
+                                padding: 20
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createStatusChart(data) {
+            const ctx = document.getElementById('statusChart').getContext('2d');
+            
+            if (statusChart) {
+                statusChart.destroy();
+            }
+
+            statusChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Open', 'In Progress', 'Resolved'],
+                    datasets: [{
+                        label: 'Issues',
+                        data: [data.open, data.inProgress, data.resolved],
+                        backgroundColor: ['#dc2626', '#FFD700', '#16a34a'],
+                        borderColor: ['#dc2626', '#FFD700', '#16a34a'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                color: '#888'
+                            },
+                            grid: {
+                                color: '#333'
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                color: '#888'
+                            },
+                            grid: {
+                                color: '#333'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createDistrictChart(data, metric = 'resolution') {
+            const ctx = document.getElementById('districtChart').getContext('2d');
+            
+            if (districtChart) {
+                districtChart.destroy();
+            }
+
+            let chartData, label, color;
+            
+            if (metric === 'resolution') {
+                chartData = data.map(item => ((item.resolved / item.total) * 100).toFixed(1));
+                label = 'Resolution Rate (%)';
+                color = '#16a34a';
+            } else {
+                chartData = data.map(item => item.avgDays);
+                label = 'Average Response Time (days)';
+                color = '#f59e0b';
+            }
+
+            districtChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.map(item => item.district),
+                    datasets: [{
+                        label: label,
+                        data: chartData,
+                        backgroundColor: color,
+                        borderColor: color,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#FFFFFF'
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                color: '#888'
+                            },
+                            grid: {
+                                color: '#333'
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                color: '#888'
+                            },
+                            grid: {
+                                color: '#333'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update overview cards
+        function updateOverviewCards(data) {
+            document.getElementById('totalIssuesCount').textContent = data.totalIssues;
+            document.getElementById('resolvedCount').textContent = data.resolvedThisMonth;
+            document.getElementById('avgResolutionTime').textContent = data.avgResolutionTime;
+            document.getElementById('satisfactionScore').textContent = `${data.satisfactionScore}%`;
+            
+            // Update change indicators (simplified for demo)
+            document.getElementById('totalIssuesChange').textContent = '+12% from last month';
+            document.getElementById('resolvedChange').textContent = '+25% resolution rate';
+            document.getElementById('avgResolutionChange').textContent = 'days average';
+            document.getElementById('satisfactionChange').textContent = '+8% approval rate';
+        }
+
+        // Load analytics data and initialize charts
+        async function loadAnalytics() {
+            try {
+                const data = await getAnalyticsData();
+                
+                // Update overview cards
+                updateOverviewCards(data);
+                
+                // Create charts
+                createIssuesTrendChart(data.issuesTrend);
+                createIssueTypesChart(data.issueTypes);
+                createStatusChart(data.statusDistribution);
+                createDistrictChart(data.districtPerformance, 'resolution');
+                
+                console.log('Analytics loaded successfully');
+            } catch (error) {
+                console.error('Error loading analytics:', error);
+            }
+        }
+
+        // Event listeners
+        document.getElementById('trendFilter').addEventListener('change', function() {
+            // In a real app, you'd reload data based on the selected period
+            console.log('Trend filter changed to:', this.value);
+        });
+
+        document.getElementById('districtFilter').addEventListener('change', function() {
+            const data = sampleAnalyticsData; // In real app, get current data
+            createDistrictChart(data.districtPerformance, this.value);
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAnalytics();
+        });
+
+        // Refresh analytics every 5 minutes
+        setInterval(loadAnalytics, 5 * 60 * 1000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CivicVoice - My Reports</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/supabase-js/2.38.0/umd/supabase.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">💬</span>
+                    <span class="logo-text">CivicVoice</span>
+                </div>
+            </div>
+            <ul class="sidebar-menu">
+                <li class="menu-item">
+                    <a href="index.html">
+                        <span class="menu-icon">📊</span>
+                        <span class="menu-text">Dashboard</span>
+                    </a>
+                </li>
+                <li class="menu-item active">
+                    <a href="my-reports.html">
+                        <span class="menu-icon">📋</span>
+                        <span class="menu-text">My Reports</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="resolved.html">
+                        <span class="menu-icon">✅</span>
+                        <span class="menu-text">Resolved</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="analytics.html">
+                        <span class="menu-icon">📈</span>
+                        <span class="menu-text">Analytics</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <div class="need-help">
+                    <h4>Need a hand?</h4>
+                    <p>Our support team is here to help</p>
+                    <button class="contact-btn">Contact Us</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <h1>My Reports</h1>
+                <div class="header-controls">
+                    <div class="search-bar">
+                        <input type="text" placeholder="Search my reports..." id="searchInput">
+                        <span class="search-icon">🔍</span>
+                    </div>
+                    <div class="notifications">
+                        <span class="notification-icon">🔔</span>
+                        <span class="notification-count">1</span>
+                    </div>
+                    <div class="profile">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiNGRkQ3MDAiLz4KPHN2ZyB4PSI4IiB5PSI4IiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSI+CjxwYXRoIGQ9Ik0yMCAyMXYtMmE0IDQgMCAwIDAtNC00SDhhNCA0IDAgMCAwLTQgNHYyIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CjxjaXJjbGUgY3g9IjEyIiBjeT0iNyIgcj0iNCIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4KPC9zdmc+" alt="Profile" class="profile-avatar">
+                    </div>
+                </div>
+            </header>
+
+            <!-- Reports Stats -->
+            <section class="stats-section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalReports">0</div>
+                        <div class="stat-label">Total Reports</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="pendingReports">0</div>
+                        <div class="stat-label">Pending</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="inProgressReports">0</div>
+                        <div class="stat-label">In Progress</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="resolvedReports">0</div>
+                        <div class="stat-label">Resolved</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- My Reports List -->
+            <section class="my-reports-section">
+                <div class="section-header">
+                    <h2>Your Reports</h2>
+                    <div class="filter-controls">
+                        <select id="statusFilter" class="filter-select">
+                            <option value="">All Statuses</option>
+                            <option value="open">Open</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="resolved">Resolved</option>
+                        </select>
+                        <select id="typeFilter" class="filter-select">
+                            <option value="">All Types</option>
+                            <option value="pothole">Pothole</option>
+                            <option value="graffiti">Graffiti</option>
+                            <option value="streetlight">Streetlight</option>
+                            <option value="trash">Trash</option>
+                            <option value="traffic">Traffic</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="reports-list" id="myReportsList">
+                    <!-- User reports will be loaded here -->
+                </div>
+
+                <div class="empty-state" id="emptyState" style="display: none;">
+                    <div class="empty-icon">📋</div>
+                    <h3>No reports found</h3>
+                    <p>You haven't submitted any reports yet. <a href="index.html">Report your first issue</a></p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Page-specific initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            loadMyReports();
+            
+            // Filter event listeners
+            document.getElementById('statusFilter').addEventListener('change', loadMyReports);
+            document.getElementById('typeFilter').addEventListener('change', loadMyReports);
+            document.getElementById('searchInput').addEventListener('input', loadMyReports);
+        });
+    </script>
+</body>
+</html>

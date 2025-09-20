@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CivicVoice - Community Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/supabase-js/2.38.0/umd/supabase.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">💬</span>
+                    <span class="logo-text">CivicVoice</span>
+                </div>
+            </div>
+            <ul class="sidebar-menu">
+                <li class="menu-item active">
+                    <a href="index.html">
+                        <span class="menu-icon">📊</span>
+                        <span class="menu-text">Dashboard</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="my-reports.html">
+                        <span class="menu-icon">📋</span>
+                        <span class="menu-text">My Reports</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="resolved.html">
+                        <span class="menu-icon">✅</span>
+                        <span class="menu-text">Resolved</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="analytics.html">
+                        <span class="menu-icon">📈</span>
+                        <span class="menu-text">Analytics</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <div class="need-help">
+                    <h4>Need a hand?</h4>
+                    <p>Our support team is here to help</p>
+                    <button class="contact-btn">Contact Us</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <h1>Community Dashboard</h1>
+                <div class="header-controls">
+                    <div class="search-bar">
+                        <input type="text" placeholder="Search issues..." id="searchInput">
+                        <span class="search-icon">🔍</span>
+                    </div>
+                    <div class="notifications">
+                        <span class="notification-icon">🔔</span>
+                        <span class="notification-count">1</span>
+                    </div>
+                    <div class="profile">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiNGRkQ3MDAiLz4KPHN2ZyB4PSI4IiB5PSI4IiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSI+CjxwYXRoIGQ9Ik0yMCAyMXYtMmE0IDQgMCAwIDAtNC00SDhhNCA0IDAgMCAwLTQgNHYyIiBzdHJva2U9IiMwMDAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CjxjaXJjbGUgY3g9IjEyIiBjeT0iNyIgcj0iNCIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4KPC9zdmc+" alt="Profile" class="profile-avatar">
+                    </div>
+                </div>
+            </header>
+
+            <!-- Report Section -->
+            <section class="report-section">
+                <h2>Have something to report?</h2>
+                <button class="report-new-btn" onclick="openReportModal()">+ Report a New Issue</button>
+                
+                <div class="report-form">
+                    <div class="photo-upload">
+                        <div class="upload-area" id="uploadArea">
+                            <div class="upload-icon">☁️</div>
+                            <p>Drop a photo here <span>or click to browse</span></p>
+                            <small>Max file size: 5MB</small>
+                            <input type="file" id="photoInput" accept="image/*" style="display: none;">
+                        </div>
+                    </div>
+                    <div class="form-controls">
+                        <select id="categorySelect" class="category-select">
+                            <option value="">Choose an issue category...</option>
+                            <option value="pothole">Pothole</option>
+                            <option value="graffiti">Graffiti</option>
+                            <option value="streetlight">Broken Streetlight</option>
+                            <option value="trash">Trash/Litter</option>
+                            <option value="traffic">Traffic Signal</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <button class="auto-locate-btn">📍 Auto-locate Address</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Community Issues -->
+            <section class="community-issues">
+                <h2>Community Issues</h2>
+                <div class="issues-filters">
+                    <button class="filter-btn" data-filter="recent">Recent</button>
+                    <button class="filter-btn" data-filter="trending">Trending</button>
+                    <button class="filter-btn active" data-filter="nearest">Nearest</button>
+                    <button class="filter-btn" data-filter="all-categories">All Categories</button>
+                    <button class="filter-btn" data-filter="all-statuses">All Statuses</button>
+                </div>
+                <div class="issues-grid" id="issuesGrid">
+                    <!-- Issues will be loaded dynamically -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Report Issue Modal -->
+    <div class="modal-overlay" id="reportModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Report New Issue</h3>
+                <button class="modal-close" onclick="closeReportModal()">×</button>
+            </div>
+            <form class="modal-form" id="reportForm">
+                <div class="form-group">
+                    <label for="issueTitle">Issue Title</label>
+                    <input type="text" id="issueTitle" placeholder="Brief description of the issue" required>
+                </div>
+                <div class="form-group">
+                    <label for="issueType">Issue Type</label>
+                    <select id="issueType" required>
+                        <option value="">Select issue type</option>
+                        <option value="pothole">Pothole</option>
+                        <option value="graffiti">Graffiti</option>
+                        <option value="streetlight">Broken Streetlight</option>
+                        <option value="trash">Trash/Litter</option>
+                        <option value="traffic">Traffic Signal</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="issueLocation">Location</label>
+                    <input type="text" id="issueLocation" placeholder="Street address or description" required>
+                </div>
+                <div class="form-group">
+                    <label for="issueDescription">Description</label>
+                    <textarea id="issueDescription" placeholder="Detailed description of the issue" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="modalPhotoInput">Upload Image</label>
+                    <input type="file" id="modalPhotoInput" accept="image/*">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeReportModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">Submit Report</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
