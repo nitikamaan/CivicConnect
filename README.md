@@ -1,11 +1,24 @@
-# CivicConnect
+CivicConnect
 
-CivicConnect is a Crowdsourced Civic Issue Reporting and Resolution System designed to strengthen citizen-to-government interaction by enabling faster, easier, and more transparent reporting and resolution of civic issues.
-🔑 Key Features:
--AI-powered image classification for automatic issue prioritization
--Speech-to-text input with GPS-based auto-location detection
--Authority dashboard for real-time issue forwarding, tracking, and management
--Data-driven insights on resolution metrics to enhance accountability and performance
-💻 Tech Stack: HTML, CSS, JavaScript, Node.js, Supabase, TensorFlow, FastAPI | Deployment: Vercel and Supabase Cloud
+CivicConnect is a platform designed to make civic issue reporting faster, easier, and more transparent. Citizens can quickly raise concerns, while authorities receive structured reports for timely resolution.
 
-Aligned with the Clean & Green Technology theme and the Smart City India Mission, CivicVoice leverages modern web and AI technologies to address real-world challenges with measurable social impact.
+🚀 Features
+
+UserFriendly Reporting:
+Submit issues with text, images, or speech-to-text input, Automatic geo-tagging for precise location tracking
+AI-Powered Classification:
+Intelligent categorization of issues using image recognition & NLP,Ensures reports reach the right department instantly
+Authority Dashboard: 
+Centralized dashboard for government/authority officials, Issues automatically routed to the responsible department, Real-time status tracking and resolution updates
+Transparency & Engagement: 
+Citizens can track progress of their complaints, Improves accountability and trust between public & authorities
+
+🛠️ Tech Stack:
+Frontend: React / Next.js
+Backend: Node.js / Express
+Database: MongoDB / PostgreSQL
+AI/ML: TensorFlow / PyTorch (for image classification & NLP)
+Other: Geo-tagging APIs, Cloud hosting
+
+🎯 Goal
+To bridge the gap between citizens and civic authorities, making issue reporting seamless and ensuring faster problem resolution through automation and AI-powered insights.
