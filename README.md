@@ -4,7 +4,7 @@ CivicConnect is a civic issue reporting and management platform designed to make
 
 Citizens can report local issues with detailed information and location data, while authorities can manage, categorize, and track complaints through a centralized dashboard.
 
-🌐 Live Demo: 
+🌐 Live Demo: https://civic-connect-iota-self.vercel.app/index.html
 
 ## 🚀 Features
 
