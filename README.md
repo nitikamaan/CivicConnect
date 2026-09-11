@@ -33,18 +33,18 @@ Citizens can report local issues with detailed information and location data, wh
 * Provides updates throughout the resolution process
 * Improves accountability between citizens and authorities
 
-### 🎨 My Contribution
+## 🎨 My Contribution
 
-I primarily worked on the frontend design and user interface of CivicConnect.
+I primarily worked on the **frontend design and user interface** of CivicConnect.
 
 My work included:
 
-Designing the overall user experience and page layouts
-Creating responsive and user-friendly interfaces
-Building pages for issue reporting and tracking
-Designing dashboards and analytics views
-Creating reusable UI components
-Improving the visual consistency and usability of the application
+* Designing the overall user experience and page layouts
+* Creating responsive and user-friendly interfaces
+* Building pages for issue reporting and tracking
+* Designing dashboards and analytics views
+* Creating reusable UI components
+* Improving the visual consistency and usability of the application
 
 The backend, database, and Supabase integration were handled by other members of the team.
 
